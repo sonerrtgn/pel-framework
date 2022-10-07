@@ -20,13 +20,13 @@ class ControllerOne{
 }
 
 
-function bulunmadi(Request $request){
+function notFoundFunction(Request $request){
       $uri = implode($request->getPath());
       echo "url : $uri not founded";
       http_response_code(404);
 }
 $requestMapping->getMapping("/soner/1232","ControllerOne::test");
 
-$requestMapping->setNotFoundPageFunction("bulunmadi");
+$requestMapping->setNotFoundPageFunction("notFoundFunction");
 $requestMapping->run();
 ?>
