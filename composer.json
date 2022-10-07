@@ -1,0 +1,19 @@
+{
+    "name": "soner/pel-framework",
+    "description": "Powrful and easy to learn web freamwork",
+    "type": "library",
+    "license": "mit",
+    "autoload": {
+        "psr-4": {
+            "PelFramework\\Http": "src/Http"
+        }
+    },
+    "authors": [
+        {
+            "name": "soner tugan",
+            "email": "1sonertugan1@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
