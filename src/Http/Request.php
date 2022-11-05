@@ -49,6 +49,9 @@ class Request{
       }
 
       private static function getRequestBody(){
+		if(!isset(getallheaders()["Content-Type"])){
+			return file_get_contents('php://input');
+		}
 		$contentType = getallheaders()["Content-Type"];
 
 		if($contentType == "application/x-www-form-urlencoded"){
