@@ -4,8 +4,9 @@
     "type": "library",
     "license": "mit",
     "autoload": {
+        "classmap": ["src/"],
         "psr-4": {
-            "PelFramework\\Http\\": "src/Http/"
+            "PelFramework\\test\\": "src/test/"
         }
     },
     "authors": [
