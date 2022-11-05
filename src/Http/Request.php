@@ -4,6 +4,9 @@ namespace PelFramework\Http;
 
 class Request{
 
+	private static Request $request;
+	private static $isDefined = false;
+
       private $path;
 
       private $header;
@@ -12,14 +15,57 @@ class Request{
 
       private $method; 
 
-      public function __construct($path,$header,$body,$method){
-            $this->path    = $path;
-            $this->header  = $header;
-            $this->body    = $body;
-            $this->method  = $method;
-
+      private function __construct($path,$header,$body,$method){
+            $this->setPath($path);
+		$this->setHeader($header);
+		$this->setBody($body);
+		$this->setMethod($method);
       }
 
+	public static function getRequestClass(){
+            if(self::$isDefined == 0){
+			self::$isDefined = 1;
+			$path   = Request::uriToPath($_SERVER["REQUEST_URI"]);
+			$header = getallheaders();
+			$body   = Request::getRequestBody();
+			$method = $_SERVER["REQUEST_METHOD"];
+			self::$request = new Request($path,$header,$body,$method);
+			return self::$request;
+
+		}else{
+			return self::$request;
+		}
+      }
+
+	/**
+       * @param string $uri  request uri.
+       * @return array $path path to uri.
+       */
+      private static function uriToPath($uri):array{
+            $path =  explode("/",$uri);
+            $path = array_splice($path,1,count($path));
+            
+            return $path;
+      }
+
+      private static function getRequestBody(){
+		$contentType = getallheaders()["Content-Type"];
+
+		if($contentType == "application/x-www-form-urlencoded"){
+			return $_POST;
+		}
+
+		if(strpos($contentType, "multipart/form-data;")){
+			return $_FILES ;
+		}
+		if($contentType =="application/json" ){
+			return json_decode(file_get_contents('php://input'));
+		}
+		if($contentType =="application/xml"){
+			return simplexml_load_string(file_get_contents('php://input'));
+		}
+            return file_get_contents('php://input');
+      }
 	
       public function getPath(){
 		return $this->path;
