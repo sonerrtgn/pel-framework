@@ -2,7 +2,6 @@
 
 namespace PelFramework\Http\RequestMapping;
 
-use PelFramework\Http\Converter\CreateRequest;
 use PelFramework\Http\Request;
 
 class RequestMapping{
@@ -51,9 +50,7 @@ class RequestMapping{
       }
 
       public function run(){ 
-            $createRequest = new CreateRequest();
-
-            $request = $createRequest->getRequestClass();
+            $request = Request::getRequestClass();
             foreach ($this->methodAndPathAndCallFunctions as $methodAndPathAndCallFunction) {
                   if($request->getMethod() != $methodAndPathAndCallFunction->getMethod()){
                         continue;
