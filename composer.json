@@ -6,10 +6,7 @@
     "autoload": {
         "psr-4": {
             "PelFramework\\Http\\": "src/Http/"
-        },
-        "files": [
-            "src/Http/Request.php"
-        ]
+        }
     },
     "authors": [
         {
