@@ -9,13 +9,16 @@ class Request{
 
       private $path;
 
+	private $url;
+
       private $header;
 
       private $body;
 
       private $method; 
 
-      private function __construct($path,$header,$body,$method){
+      private function __construct($url,$path,$header,$body,$method){
+		$this->setUrl($url);
             $this->setPath($path);
 		$this->setHeader($header);
 		$this->setBody($body);
@@ -25,11 +28,13 @@ class Request{
 	public static function getRequestClass(){
             if(self::$isDefined == 0){
 			self::$isDefined = 1;
+			$url = $_SERVER["REQUEST_URI"];
 			$path   = Request::uriToPath($_SERVER["REQUEST_URI"]);
 			$header = getallheaders();
 			$body   = Request::getRequestBody();
 			$method = $_SERVER["REQUEST_METHOD"];
-			self::$request = new Request($path,$header,$body,$method);
+			
+			self::$request = new Request($url,$path,$header,$body,$method);
 			return self::$request;
 
 		}else{
@@ -101,5 +106,13 @@ class Request{
 
 	public function setMethod($method){
 		$this->method = $method;
+	}
+
+	public function getUrl(){
+		return $this->url;
+	}
+
+	public function setUrl($url){
+		$this->url = $url;
 	}
 }
