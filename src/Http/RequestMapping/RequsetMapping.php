@@ -3,6 +3,7 @@
 namespace PelFramework\Http\RequestMapping;
 
 use PelFramework\Http\Request;
+use PelFramework\IoC\EntityManager;
 
 class RequestMapping{
 
@@ -98,18 +99,11 @@ class RequestMapping{
       }
 
       private function runCallFunction($functionName,Request $request){
-            $isClassAndMethod = strpos($functionName, "::");
+            $entityManager = EntityManager::getEntityManager();
+            $runClass = $entityManager->get($functionName["classId"]);
 
-            if ($isClassAndMethod === false) { // just function
-                  $functionName($request);
-                  return;
-            }
-            $classAndFunction = explode("::",$functionName);
-            $className = $classAndFunction[0];
-            $functionName  = $classAndFunction[1];
-
-            $class = new $className();
-
-            $class->$functionName($request);
+            $methodName = $functionName["methodName"];
+            $runClass->$methodName($request);
+            
       } 
 }

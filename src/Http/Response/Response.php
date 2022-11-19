@@ -3,8 +3,8 @@ namespace PelFramework\Http\Response;
 
 class Response{
 
+      
       public static int $HTTP_STATUS_OK = 200;
-
       public static int $HTTP_STATUS_BAD_REQUEST = 400;
 
       public static int $HTTP_STATUS_UNAUTHORIZED = 401;
