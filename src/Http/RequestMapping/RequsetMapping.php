@@ -92,10 +92,6 @@ class RequestMapping{
                   $this->runCallFunction($this->notFoundPageFunction,$request);
                   return;                  
             }
-
-            
-
-
       }
 
       private function runCallFunction($functionName,Request $request){

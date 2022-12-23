@@ -2,12 +2,14 @@
 
 namespace PelFramework\IoC;
 
+use PelFramework\IoC\Exceptions\ClassIdOrValueNotFoundException;
 use ReflectionClass;
 use PelFramework\IoC\Exceptions\IoCRepeatClassIdException;
 use PelFramework\IoC\Exceptions\IoCClassNotFoundException;
 use PelFramework\IoC\Exceptions\IoCConstructorParametersException;
 use PelFramework\IoC\Exceptions\IoCSetterMethodNotFoundException;
 use PelFramework\IoC\Exceptions\IoCUnkownClassId;
+use PelFramework\IoC\Exceptions\OnlyOneOfClassIdOrValueMustBeExist;
 
 class EntityManager{
 
@@ -56,33 +58,66 @@ class EntityManager{
       private function setClassDependencys($class,array $dependencys){
             if(count($dependencys) != 0){
 
-                  $classMethods = get_class_methods($class);
-
                   foreach ($dependencys as $dependency) {
 
-                        // classId control
-                        if(!isset($this->classInformation[$dependency["classId"]])){
-                              throw new IoCUnkownClassId($dependency["classId"]);
+                        $this->validateDependencyValue($class,$dependency);
+                        
+                        if(isset($dependency["classId"])){
+                              $this->setClassDependencyForClass($class,$dependency);
+                              return ;
                         }
-
-                        $classSetterMethodName = "set". strtolower($dependency["attributeName"]);
-                        $isClassMethodFound = false;
-
-                        // search setter method for dependencys
-                        foreach($classMethods as $classMethod){
-                              if(strtolower($classMethod) == $classSetterMethodName){
-                                    $dependedClass = $this->classInformation[$dependency["classId"]]->getClass();
-                                    $class->$classMethod($dependedClass);
-                                    $isClassMethodFound = true;
-                                    continue ;
-                              }
-                        }
-                        if(!$isClassMethodFound){
-                              throw new IoCSetterMethodNotFoundException($dependency["attributeName"]);
-                        }     
+                        $this->setValueDependencyForClass($class,$dependency);
                   }
             }
             return $class;
+      }
+
+      private function validateDependencyValue($class,$dependency){
+            if(!isset($dependency["classId"]) && !isset($dependency["value"]) ){
+                  throw new ClassIdOrValueNotFoundException(get_class($class));
+            }
+
+            if(isset($dependency["classId"]) && isset($dependency["value"]) ){
+                  throw new OnlyOneOfClassIdOrValueMustBeExist(get_class($class));
+            }
+      }
+
+      private function setClassDependencyForClass($class,$dependency){
+            $classMethods = get_class_methods($class);
+            $classSetterMethodName = "set". strtolower($dependency["attributeName"]);
+            $isClassMethodFound = false;
+
+            // search setter method for dependencys
+            foreach($classMethods as $classMethod){
+                  if(strtolower($classMethod) == $classSetterMethodName){
+                        $dependedClass = $this->classInformation[$dependency["classId"]]->getClass();
+                        $class->$classMethod($dependedClass);
+                        $isClassMethodFound = true;
+                        continue ;
+                  }
+            }
+            if(!$isClassMethodFound){
+                  throw new IoCSetterMethodNotFoundException($dependency["attributeName"]);
+            } 
+      }
+
+      private function setValueDependencyForClass($class,$dependency){
+            $classMethods = get_class_methods($class);
+
+            $classSetterMethodName = "set". strtolower($dependency["attributeName"]);
+            $isClassMethodFound = false;
+
+            // search setter method for dependencys
+            foreach($classMethods as $classMethod){
+                  if(strtolower($classMethod) == $classSetterMethodName){
+                        $class->{$classMethod}($dependency["value"]);
+                        $isClassMethodFound = true;
+                        continue ;
+                  }
+            }
+            if(!$isClassMethodFound){
+                  throw new IoCSetterMethodNotFoundException($dependency["attributeName"]);
+            } 
       }
 
       private function validateClass($classAddres){
