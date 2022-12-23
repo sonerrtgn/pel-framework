@@ -6,7 +6,7 @@
 
       <testsuites>
             <testsuite name="CreateClassTest">
-                  <directory>test/Ioc</directory>
+                  <directory>tests/Ioc</directory>
             </testsuite>
       </testsuites>
 </phpunit>

@@ -4,9 +4,11 @@
     "type": "library",
     "license": "mit",
     "autoload": {
-        "classmap": ["src/"],
+        "classmap": ["src/"]
+    },
+    "autoload-dev": {
         "psr-4": {
-            "PelFramework\\test\\": "src/test/"
+            "Tests\\": "tests/"
         }
     },
     "authors": [
