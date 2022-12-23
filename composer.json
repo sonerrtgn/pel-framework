@@ -1,6 +1,6 @@
 {
     "name": "soner/pel-framework",
-    "description": "Powrful and easy to learn web freamwork",
+    "description": "Powerful and easy to learn web freamwork",
     "type": "library",
     "license": "mit",
     "autoload": {
