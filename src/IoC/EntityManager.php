@@ -14,7 +14,7 @@ use PelFramework\IoC\Exceptions\OnlyOneOfClassIdOrValueMustBeExist;
 class EntityManager{
 
       private static ?EntityManager $entityManager = null;
-
+  
       private array $classInformation =[];
 
       public static function getEntityManager(){
